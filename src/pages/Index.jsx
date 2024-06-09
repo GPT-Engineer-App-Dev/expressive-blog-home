@@ -1,7 +1,8 @@
 import { Box, Container, VStack, Text, Heading, Button, Image, Flex, Link, HStack } from "@chakra-ui/react";
 import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
+import { Link as RouterLink } from "react-router-dom";
 
-const Index = () => {
+const Index = ({ posts }) => {
   return (
     <Box>
       {/* Navigation Bar */}
@@ -9,10 +10,11 @@ const Index = () => {
         <Container maxW="container.lg" display="flex" justifyContent="space-between" alignItems="center">
           <Heading as="h1" size="lg">My Blog</Heading>
           <HStack spacing={8}>
-            <Link href="#" color="white">Home</Link>
-            <Link href="#" color="white">About</Link>
-            <Link href="#" color="white">Blog</Link>
-            <Link href="#" color="white">Contact</Link>
+            <Link as={RouterLink} to="/" color="white">Home</Link>
+            <Link as={RouterLink} to="#" color="white">About</Link>
+            <Link as={RouterLink} to="#" color="white">Blog</Link>
+            <Link as={RouterLink} to="#" color="white">Contact</Link>
+            <Link as={RouterLink} to="/add-post" color="white">Add Post</Link>
           </HStack>
         </Container>
       </Box>
@@ -31,21 +33,13 @@ const Index = () => {
         <Container maxW="container.lg">
           <Heading as="h3" size="xl" mb={8} textAlign="center">Latest Blog Posts</Heading>
           <VStack spacing={8}>
-            <Box p={5} shadow="md" borderWidth="1px" width="100%">
-              <Heading fontSize="xl">Blog Post Title 1</Heading>
-              <Text mt={4}>This is a short excerpt from the blog post...</Text>
-              <Link color="teal.500" mt={2} display="block">Read More</Link>
-            </Box>
-            <Box p={5} shadow="md" borderWidth="1px" width="100%">
-              <Heading fontSize="xl">Blog Post Title 2</Heading>
-              <Text mt={4}>This is a short excerpt from the blog post...</Text>
-              <Link color="teal.500" mt={2} display="block">Read More</Link>
-            </Box>
-            <Box p={5} shadow="md" borderWidth="1px" width="100%">
-              <Heading fontSize="xl">Blog Post Title 3</Heading>
-              <Text mt={4}>This is a short excerpt from the blog post...</Text>
-              <Link color="teal.500" mt={2} display="block">Read More</Link>
-            </Box>
+            {posts.map(post => (
+              <Box key={post.id} p={5} shadow="md" borderWidth="1px" width="100%">
+                <Heading fontSize="xl">{post.title}</Heading>
+                {post.image && <Image src={post.image} alt={post.title} mt={4} />}
+                <Text mt={4}>{post.content}</Text>
+              </Box>
+            ))}
           </VStack>
         </Container>
       </Box>
