@@ -13,6 +13,10 @@ const App = () => {
     setPosts([post, ...posts]);
   };
 
+  const deletePost = (postId) => {
+    setPosts(posts.filter(post => post.id !== postId));
+  };
+
   useEffect(() => {
     const savedColorMode = localStorage.getItem('chakra-ui-color-mode');
     if (savedColorMode) {
@@ -36,7 +40,7 @@ const App = () => {
       />
       <Router>
         <Routes>
-          <Route exact path="/" element={<Index posts={posts} />} />
+          <Route exact path="/" element={<Index posts={posts} deletePost={deletePost} />} />
           <Route path="/add-post" element={<AddPost addNewPost={addNewPost} />} />
         </Routes>
       </Router>
