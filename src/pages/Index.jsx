@@ -1,8 +1,29 @@
-import { Box, Container, VStack, Text, Heading, Button, Image, Flex, Link, HStack } from "@chakra-ui/react";
-import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
+import { Box, Container, VStack, Text, Heading, Button, Image, Flex, Link, HStack, IconButton, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from "@chakra-ui/react";
+import { FaTwitter, FaFacebook, FaInstagram, FaTrash } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
+import { useState } from 'react';
 
-const Index = ({ posts }) => {
+const Index = ({ posts, deletePost }) => {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [postToDelete, setPostToDelete] = useState(null);
+
+  const openDeleteDialog = (post) => {
+    setPostToDelete(post);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setPostToDelete(null);
+    setIsDeleteDialogOpen(false);
+  };
+
+  const handleDeletePost = () => {
+    if (postToDelete) {
+      deletePost(postToDelete.id);
+      closeDeleteDialog();
+    }
+  };
+
   return (
     <Box>
       {/* Navigation Bar */}
@@ -38,6 +59,14 @@ const Index = ({ posts }) => {
                 <Heading fontSize="xl">{post.title}</Heading>
                 {post.image && <Image src={post.image} alt={post.title} mt={4} />}
                 <Text mt={4}>{post.content}</Text>
+                <IconButton
+                  aria-label="Delete post"
+                  icon={<FaTrash />}
+                  onClick={() => openDeleteDialog(post)}
+                  variant="outline"
+                  colorScheme="red"
+                  ml={2}
+                />
               </Box>
             ))}
           </VStack>
@@ -56,6 +85,32 @@ const Index = ({ posts }) => {
           <Text>&copy; {new Date().getFullYear()} My Blog. All rights reserved.</Text>
         </Container>
       </Box>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        isOpen={isDeleteDialogOpen}
+        leastDestructiveRef={null}
+        onClose={closeDeleteDialog}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Post
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              Are you sure you want to delete this post? This action cannot be undone.
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button onClick={closeDeleteDialog}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={handleDeletePost} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };
